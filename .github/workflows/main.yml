@@ -38,7 +38,7 @@ jobs:
           directory: .
           snakefile: "workflow/Snakefile"
           args: |
-            --lint 
-            --config id=linting 
-            count_file=resources/reporter_experiment_barcode.tsv.gz 
+            --lint
+            --config id=linting
+            count_file=resources/reporter_experiment_barcode.tsv.gz
             sequence_design_file=resources/mpra_library_design.tsv.gz
