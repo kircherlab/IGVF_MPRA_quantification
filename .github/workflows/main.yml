@@ -1,11 +1,11 @@
 ---
-name: Tests
-
 on: # yamllint disable-line rule:truthy
   push:
     branches: [master, development]
   pull_request:
     branches: [master, development]
+
+name: Tests
 
 jobs:
   Formatting:
