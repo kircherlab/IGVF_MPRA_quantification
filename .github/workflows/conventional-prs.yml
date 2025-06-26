@@ -1,5 +1,4 @@
 ---
-name: "Lint PR"
 on: # yamllint disable-line rule:truthy
   pull_request_target:
     types:
@@ -10,6 +9,8 @@ on: # yamllint disable-line rule:truthy
 
 permissions:
   pull-requests: read
+
+name: Lint PR
 
 jobs:
   main:
