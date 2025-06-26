@@ -1,0 +1,40 @@
+---
+name: Tests
+
+on:
+  push:
+    branches: [master, development]
+  pull_request:
+    branches: [master, development]
+
+jobs:
+  Formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Formatting
+        uses: super-linter/super-linter@v6
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: master
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_PYTHON_FLAKE8: true
+          PYTHON_FLAKE8_CONFIG_FILE: .flake8
+          VALIDATE_JSON: true
+          VALIDATE_YAML: true
+          YAML_CONFIG_FILE: .yamllint.yml
+          VALIDATE_SNAKEMAKE_SNAKEFMT: true
+          VALIDATE_R: true
+
+  Linting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint workflow
+        uses: snakemake/snakemake-github-action@v1
+        with:
+          directory: .
+          snakefile: workflow/Snakefile
+          args: "--lint --config id=linting count_file=resources/reporter_experiment_barcode.tsv.gz sequence_design_file=resources/mpra_library_design.tsv.gz"

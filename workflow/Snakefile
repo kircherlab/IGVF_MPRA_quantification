@@ -1,0 +1,26 @@
+configfile: "config/config.yaml"
+
+
+rule all_variants:
+    input:
+        expand(
+            "results/{id}/{format}/{id}.{format}.{method}.tsv.gz",
+            method=config["method"],
+            format=["reporter_variants", "reporter_genomic_variants"],
+            id=config["id"],
+        ),
+
+
+rule all_elements:
+    input:
+        expand(
+            "results/{id}/{format}/{id}.{format}.{method}.tsv.gz",
+            method=config["method"],
+            format=["reporter_elements", "reporter_genomic_elements"],
+            id=config["id"],
+        ),
+
+
+include: "rules/common.smk"
+include: "rules/variants.smk"
+include: "rules/elements.smk"
