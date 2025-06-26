@@ -1,7 +1,7 @@
 ---
 name: Tests
 
-on:
+on: # yamllint disable-line rule:truthy
   push:
     branches: [master, development]
   pull_request:
@@ -36,5 +36,9 @@ jobs:
         uses: snakemake/snakemake-github-action@v1
         with:
           directory: .
-          snakefile: workflow/Snakefile
-          args: "--lint --config id=linting count_file=resources/reporter_experiment_barcode.tsv.gz sequence_design_file=resources/mpra_library_design.tsv.gz"
+          snakefile: "workflow/Snakefile"
+            args: |
+            --lint
+            --config id=linting
+            count_file=resources/reporter_experiment_barcode.tsv.gz
+            sequence_design_file=resources/mpra_library_design.tsv.gz

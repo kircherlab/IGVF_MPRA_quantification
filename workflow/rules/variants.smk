@@ -64,6 +64,7 @@ rule run_variants_bcalm_quantification:
         --output {output.result} --output-plot {output.vulcano_plot} > {log} 2>&1
         """
 
+
 rule run_variants_mpralm_quantification:
     container:
         "docker://visze/bcalm:latest"
@@ -84,6 +85,7 @@ rule run_variants_mpralm_quantification:
         --normalize {params.normalize} \
         --output {output.result} --output-plot {output.vulcano_plot} > {log} 2>&1
         """
+
 
 rule get_reporter_variants:
     # container:
