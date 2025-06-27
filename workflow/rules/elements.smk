@@ -34,7 +34,7 @@ rule run_elements_quantification:
     threads: 1
     resources:
         # Adjust memory based on input size
-        mem_mb=lambda wc, input: calc_mem_gb(
+        mem_mb=lambda wc, input, attempt: calc_mem_gb(
             input[0], 450 if wc.method == "bcalm" else 50, attempt
         )
         * 1024,
