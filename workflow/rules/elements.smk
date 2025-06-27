@@ -35,7 +35,7 @@ rule run_elements_quantification:
     resources:
         # Adjust memory based on input size
         mem_mb=lambda wc, input: calc_mem_gb(
-            input[0], 450 if wc.method == "bcalm" else 50
+            input[0], 450 if wc.method == "bcalm" else 50, wc.attempt
         )
         * 1024,
     input:
