@@ -2,7 +2,10 @@ rule get_element_counts:
     # container:
     #   "docker://quay.io/biocontainers/mpralib:0.7.3--pyhdfd78af_0"
     conda:
-        "mpralib"
+        getCondaEnv("mpralib.yaml")
+    threads: 1
+    resources:
+        mem_mb=lambda wc, input: calc_mem_gb(input[0], 50) * 1024,  # Adjust memory based on input size
     input:
         counts=config["count_file"],
         sequence_design=config["sequence_design_file"],
@@ -10,6 +13,8 @@ rule get_element_counts:
         element_counts="results/{id}/quantification/{id}.{method}.element.input.tsv.gz",
     log:
         "logs/elements/get_element_counts.{id}.{method}.log",
+    benchmark:
+        "benchmarks/elements/get_element_counts.{id}.{method}.tsv"
     params:
         normalize="--normalized-counts" if config["mpralib_normalized_counts"] else "",
         bc_threshold=1,
@@ -26,6 +31,13 @@ rule get_element_counts:
 rule run_elements_quantification:
     container:
         "docker://visze/bcalm:latest"
+    threads: 1
+    resources:
+        # Adjust memory based on input size
+        mem_mb=lambda wc, input: calc_mem_gb(
+            input[0], 450 if wc.method == "bcalm" else 50
+        )
+        * 1024,
     input:
         element_counts="results/{id}/quantification/{id}.{method}.element.input.tsv.gz",
         labels=config.get("label_file", "UNKNOWN_LABEL_FILE"),
@@ -36,6 +48,8 @@ rule run_elements_quantification:
         density_plot="results/{id}/quantification/{id}.{method}.element.density.png",
     log:
         "logs/elements/run_elements_quantification.{id}.{method}.log",
+    benchmark:
+        "benchmarks/elements/run_elements_quantification.{id}.{method}.tsv"
     params:
         normalize="FALSE" if config["mpralib_normalized_counts"] else "TRUE",
         control_label=config.get("control_label", "UNKNOWN_CONTROL_LABEL"),
@@ -56,7 +70,10 @@ rule get_reporter_elements:
     # container:
     #     "docker://quay.io/biocontainers/mpralib:0.7.3--pyhdfd78af_0"
     conda:
-        "mpralib"
+        getCondaEnv("mpralib.yaml")
+    threads: 1
+    resources:
+        mem_mb=lambda wc, input: calc_mem_gb(input[0], 50) * 1024,  # Adjust memory based on input size
     input:
         quantification="results/{id}/quantification/{id}.{method}.element.output.tsv.gz",
         counts=config["count_file"],
@@ -65,6 +82,8 @@ rule get_reporter_elements:
         reporter_elements="results/{id}/{format}/{id}.{format}.{method}.tsv.gz",
     log:
         "logs/elements/get_reporter_elements.{id}.{method}.{format}.log",
+    benchmark:
+        "benchmarks/elements/get_reporter_elements.{id}.{method}.{format}.tsv"
     wildcard_constraints:
         format="(reporter_elements)|(reporter_genomic_elements)",
     params:
