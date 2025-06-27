@@ -35,9 +35,10 @@ rule run_elements_quantification:
     resources:
         # Adjust memory based on input size
         mem_mb=lambda wc, input: calc_mem_gb(
-            input[0], 450 if wc.method == "bcalm" else 50, wc.attempt
+            input[0], 450 if wc.method == "bcalm" else 50, attempt
         )
         * 1024,
+    retries: 3
     input:
         element_counts="results/{id}/quantification/{id}.{method}.element.input.tsv.gz",
         labels=config.get("label_file", "UNKNOWN_LABEL_FILE"),

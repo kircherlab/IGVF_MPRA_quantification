@@ -57,7 +57,8 @@ rule run_variants_bcalm_quantification:
         "docker://visze/bcalm:latest"
     threads: 1
     resources:
-        mem_mb=lambda wc, input: calc_mem_gb(input[0], 450, wc.attempt) * 1024,  # Adjust memory based on input size
+        mem_mb=lambda wc, input: calc_mem_gb(input[0], 450, attempt) * 1024,  # Adjust memory based on input size
+    retries: 3
     input:
         variant_counts="results/{id}/quantification/{id}.bcalm.variant.input.tsv.gz",
         variant_map="results/{id}/{id}.variant_map.tsv.gz",
@@ -85,7 +86,8 @@ rule run_variants_mpralm_quantification:
         "docker://visze/bcalm:latest"
     threads: 1
     resources:
-        mem_mb=lambda wc, input: calc_mem_gb(input[0], 50, wc.attempt) * 1024,  # Adjust memory based on input size
+        mem_mb=lambda wc, input: calc_mem_gb(input[0], 50, attempt) * 1024,  # Adjust memory based on input size
+    retries: 3
     input:
         variant_counts="results/{id}/quantification/{id}.mpralm.variant.input.tsv.gz",
         script=getScript("mpralm_variants.R"),
