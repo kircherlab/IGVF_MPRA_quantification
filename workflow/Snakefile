@@ -1,4 +1,6 @@
-configfile: "config/config.yaml"
+include: "rules/common.smk"
+include: "rules/variants.smk"
+include: "rules/elements.smk"
 
 
 rule all_variants:
@@ -19,8 +21,3 @@ rule all_elements:
             format=["reporter_elements", "reporter_genomic_elements"],
             id=config["id"],
         ),
-
-
-include: "rules/common.smk"
-include: "rules/variants.smk"
-include: "rules/elements.smk"

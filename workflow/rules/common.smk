@@ -34,3 +34,5 @@ def calc_mem_gb(input_file, scaling_factor=10):
 
     # Minimum 1 GB
     return max(mem_gb, 1)
+
+configfile: getWorkflowFile("../../config","config.yaml")
