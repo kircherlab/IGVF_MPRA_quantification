@@ -2,6 +2,6 @@
 usage:
   software-stack-deployment:
     conda: false
-    apptainer: false
+    apptainer: true
     apptainer+conda: true
   report: false

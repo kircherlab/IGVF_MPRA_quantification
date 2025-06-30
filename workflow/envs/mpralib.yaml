@@ -4,6 +4,4 @@ channels:
   - bioconda
 dependencies:
   - python>=3.10
-  - pip
-  - pip:
-    - mpralib==0.8.1
+  - mpralib==0.8.1
