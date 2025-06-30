@@ -86,7 +86,7 @@ rule run_variants_mpralm_quantification:
         "docker://visze/bcalm:latest"
     threads: 1
     resources:
-        mem_mb=lambda wc, input, attempt: calc_mem_gb(input[0], 50, attempt) * 1024,  # Adjust memory based on input size
+        mem_mb=lambda wc, input, attempt: calc_mem_gb(input[0], 70, attempt) * 1024,  # Adjust memory based on input size
     retries: 3
     input:
         variant_counts="results/{id}/quantification/{id}.mpralm.variant.input.tsv.gz",
@@ -116,7 +116,7 @@ rule get_reporter_variants:
         getCondaEnv("mpralib.yaml")
     threads: 1
     resources:
-        mem_mb=lambda wc, input: calc_mem_gb(input[0], 50) * 1024,  # Adjust memory based on input size
+        mem_mb=lambda wc, input: calc_mem_gb(input[1], 75) * 1024,  # Adjust memory based on input size
     input:
         quantification="results/{id}/quantification/{id}.{method}.variant.output.tsv.gz",
         counts=config["count_file"],
