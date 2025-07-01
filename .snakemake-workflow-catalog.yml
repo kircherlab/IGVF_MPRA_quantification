@@ -3,5 +3,5 @@ usage:
   software-stack-deployment:
     conda: false
     apptainer: true
-    apptainer+conda: true
+    apptainer+conda: false
   report: false
