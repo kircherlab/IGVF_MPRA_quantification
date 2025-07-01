@@ -1,6 +1,6 @@
 rule get_element_counts:
     container:
-        "docker://quay.io/biocontainers/mpralib:0.8.1--pyhdfd78af_0"
+        "docker://quay.io/biocontainers/mpralib:0.8.2--pyhdfd78af_0"
     conda:
         getCondaEnv("mpralib.yaml")
     threads: 1
@@ -69,7 +69,7 @@ rule run_elements_quantification:
 
 rule get_reporter_elements:
     container:
-        "docker://quay.io/biocontainers/mpralib:0.8.1--pyhdfd78af_0"
+        "docker://quay.io/biocontainers/mpralib:0.8.2--pyhdfd78af_0"
     conda:
         getCondaEnv("mpralib.yaml")
     threads: 1
