@@ -6,9 +6,13 @@ include: "rules/elements.smk"
 rule all_variants:
     input:
         expand(
-            "results/{id}/{format}/{id}.{format}.{method}.tsv.gz",
+            "results/{id}/reporter_variants/{id}.{format}.reporter_variants.tsv.gz",
             method=config["method"],
-            format=["reporter_variants", "reporter_genomic_variants"],
+            id=config["id"],
+        ),
+        expand(
+            "results/{id}/reporter_genomic_variants/{id}.{format}.reporter_genomic_variants.bed.gz",
+            method=config["method"],
             id=config["id"],
         ),
 
@@ -16,8 +20,12 @@ rule all_variants:
 rule all_elements:
     input:
         expand(
-            "results/{id}/{format}/{id}.{format}.{method}.tsv.gz",
+            "results/{id}/reporter_elements/{id}.reporter_elements.{method}.tsv.gz",
             method=config["method"],
-            format=["reporter_elements", "reporter_genomic_elements"],
+            id=config["id"],
+        ),
+        expand(
+            "results/{id}/reporter_genomic_elements/{id}.reporter_genomic_elements.{method}.tsv.gz",
+            method=config["method"],
             id=config["id"],
         ),

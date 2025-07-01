@@ -122,29 +122,50 @@ rule get_reporter_variants:
         counts=config["count_file"],
         sequence_design=config["sequence_design_file"],
     output:
-        reporter_variants="results/{id}/{format}/{id}.{format}.{method}.tsv.gz",
+        "results/{id}/reporter_variants/{id}.reporter_variants.{method}.tsv.gz",
     log:
-        "logs/variants/get_reporter_variants.{id}.{method}.{format}.log",
+        "logs/variants/get_reporter_variants.{id}.{method}.log",
     benchmark:
-        "benchmarks/variants/get_reporter_variants.{id}.{method}.{format}.tsv"
-    wildcard_constraints:
-        format="(reporter_variants)|(reporter_genomic_variants)",
+        "benchmarks/variants/get_reporter_variants.{id}.{method}.tsv"
     params:
         bc_threshold=10,
-        output_format=lambda wc: (
-            ("get-reporter-variants", "--output-reporter-variants")
-            if wc.format == "reporter_variants"
-            else (
-                "get-reporter-genomic-variants",
-                "--output-reporter-genomic-variants",
-            )
-        ),
     shell:
         """
-        mpralib sequence-design {params.output_format[0]} \
+        mpralib sequence-design get-reporter-variants \
         --input {input.counts} \
         --sequence-design {input.sequence_design} \
         --bc-threshold {params.bc_threshold} \
         --statistics {input.quantification} \
-        {params.output_format[1]} {output.reporter_variants} > {log} 2>&1
+        --output-reporter-variants {output} > {log} 2>&1
+        """
+
+
+rule get_reporter_genomic_variants:
+    container:
+        "docker://quay.io/biocontainers/mpralib:0.8.2--pyhdfd78af_0"
+    conda:
+        getCondaEnv("mpralib.yaml")
+    threads: 1
+    resources:
+        mem_mb=lambda wc, input: calc_mem_gb(input[1], 75) * 1024,  # Adjust memory based on input size
+    input:
+        quantification="results/{id}/quantification/{id}.{method}.variant.output.tsv.gz",
+        counts=config["count_file"],
+        sequence_design=config["sequence_design_file"],
+    output:
+        "results/{id}/reporter_genomic_variants/{id}.reporter_genomic_variants.{method}.bed.gz",
+    log:
+        "logs/variants/get_reporter_genomic_variants.{id}.{method}.log",
+    benchmark:
+        "benchmarks/variants/get_reporter_genomic_variants.{id}.{method}.tsv"
+    params:
+        bc_threshold=10,
+    shell:
+        """
+        mpralib sequence-design get-reporter-genomic-variants \
+        --input {input.counts} \
+        --sequence-design {input.sequence_design} \
+        --bc-threshold {params.bc_threshold} \
+        --statistics {input.quantification} \
+        --output-reporter-genomic-variants {output} > {log} 2>&1
         """

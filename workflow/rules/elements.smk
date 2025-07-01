@@ -80,30 +80,54 @@ rule get_reporter_elements:
         counts=config["count_file"],
         sequence_design=config["sequence_design_file"],
     output:
-        reporter_elements="results/{id}/{format}/{id}.{format}.{method}.tsv.gz",
+        "results/{id}/reporter_elements/{id}.reporter_elements.{method}.tsv.gz",
     log:
-        "logs/elements/get_reporter_elements.{id}.{method}.{format}.log",
+        "logs/elements/get_reporter_elements.{id}.{method}.log",
     benchmark:
-        "benchmarks/elements/get_reporter_elements.{id}.{method}.{format}.tsv"
+        "benchmarks/elements/get_reporter_elements.{id}.{method}.tsv"
     wildcard_constraints:
         format="(reporter_elements)|(reporter_genomic_elements)",
     params:
         bc_threshold=10,
-        output_format=lambda wc: (
-            ("get-reporter-elements", "--output-reporter-elements", "")
-            if wc.format == "reporter_elements"
-            else (
-                "get-reporter-genomic-elements",
-                "--output-reporter-genomic-elements",
-                "--reference GRCh38",
-            )
-        ),
     shell:
         """
-        mpralib sequence-design {params.output_format[0]} \
+        mpralib sequence-design get-reporter-elements \
         --input {input.counts} \
         --sequence-design {input.sequence_design} \
         --bc-threshold {params.bc_threshold} \
-        --statistics {input.quantification} {params.output_format[2]} \
-        {params.output_format[1]}  {output.reporter_elements} > {log} 2>&1
+        --statistics {input.quantification} \
+        --output-reporter-elements {output} > {log} 2>&1
+        """
+
+
+rule get_reporter_genomic_elements:
+    container:
+        "docker://quay.io/biocontainers/mpralib:0.8.2--pyhdfd78af_0"
+    conda:
+        getCondaEnv("mpralib.yaml")
+    threads: 1
+    resources:
+        mem_mb=lambda wc, input: calc_mem_gb(input[0], 50) * 1024,  # Adjust memory based on input size
+    input:
+        quantification="results/{id}/quantification/{id}.{method}.element.output.tsv.gz",
+        counts=config["count_file"],
+        sequence_design=config["sequence_design_file"],
+    output:
+        "results/{id}/reporter_genomic_elements/{id}.reporter_genomic_elements.{method}.bed.gz",
+    log:
+        "logs/elements/get_reporter_genomic_elements.{id}.{method}.log",
+    benchmark:
+        "benchmarks/elements/get_reporter_genomic_elements.{id}.{method}.tsv"
+    params:
+        bc_threshold=10,
+        reference="GRCh38",
+    shell:
+        """
+        mpralib sequence-design get-reporter-genomic-elements \
+        --input {input.counts} \
+        --sequence-design {input.sequence_design} \
+        --bc-threshold {params.bc_threshold} \
+        --statistics {input.quantification} \
+        --reference {params.reference} \
+        --output-reporter-genomic-elements  {output} > {log} 2>&1
         """
