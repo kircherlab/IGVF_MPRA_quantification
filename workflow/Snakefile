@@ -25,7 +25,7 @@ rule all_elements:
             id=config["id"],
         ),
         expand(
-            "results/{id}/reporter_genomic_elements/{id}.reporter_genomic_elements.{method}.tsv.gz",
+            "results/{id}/reporter_genomic_elements/{id}.reporter_genomic_elements.{method}.bed.gz",
             method=config["method"],
             id=config["id"],
         ),
