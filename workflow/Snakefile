@@ -6,12 +6,12 @@ include: "rules/elements.smk"
 rule all_variants:
     input:
         expand(
-            "results/{id}/reporter_variants/{id}.reporter_variants.reporter_variants.tsv.gz",
+            "results/{id}/reporter_variants/{id}.reporter_variants.{method}.tsv.gz",
             method=config["method"],
             id=config["id"],
         ),
         expand(
-            "results/{id}/reporter_genomic_variants/{id}.reporter_genomic_variants.reporter_genomic_variants.bed.gz",
+            "results/{id}/reporter_genomic_variants/{id}.reporter_genomic_variants.{method}.bed.gz",
             method=config["method"],
             id=config["id"],
         ),
