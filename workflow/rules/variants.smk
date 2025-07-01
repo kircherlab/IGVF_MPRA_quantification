@@ -123,6 +123,8 @@ rule get_reporter_variants:
         sequence_design=config["sequence_design_file"],
     output:
         "results/{id}/reporter_variants/{id}.reporter_variants.{method}.tsv.gz",
+    wildcard_constraints:
+        method="(bcalm)|(mpralm)",
     log:
         "logs/variants/get_reporter_variants.{id}.{method}.log",
     benchmark:
@@ -154,6 +156,8 @@ rule get_reporter_genomic_variants:
         sequence_design=config["sequence_design_file"],
     output:
         "results/{id}/reporter_genomic_variants/{id}.reporter_genomic_variants.{method}.bed.gz",
+    wildcard_constraints:
+        method="(bcalm)|(mpralm)",
     log:
         "logs/variants/get_reporter_genomic_variants.{id}.{method}.log",
     benchmark:
