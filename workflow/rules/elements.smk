@@ -5,7 +5,7 @@ rule get_element_counts:
         getCondaEnv("mpralib.yaml")
     threads: 1
     resources:
-        mem_mb=lambda wc, input: calc_mem_gb(input[0], 50) * 1024,  # Adjust memory based on input size
+        mem_mb=lambda wc, input: calc_mem_gb(input[0], 75) * 1024,  # Adjust memory based on input size
     input:
         counts=config["count_file"],
         sequence_design=config["sequence_design_file"],
