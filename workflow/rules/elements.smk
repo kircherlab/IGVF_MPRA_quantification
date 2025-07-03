@@ -10,15 +10,15 @@ rule get_element_counts:
         counts=config["count_file"],
         sequence_design=config["sequence_design_file"],
     output:
-        element_counts="results/{id}/quantification/{id}.{method}.element.input.tsv.gz",
+        element_counts="results/{id}/quantification/{id}.{level}.element.input.tsv.gz",
     log:
-        "logs/elements/get_element_counts.{id}.{method}.log",
+        "logs/elements/get_element_counts.{id}.{level}.log",
     benchmark:
-        "benchmarks/elements/get_element_counts.{id}.{method}.tsv"
+        "benchmarks/elements/get_element_counts.{id}.{level}.tsv"
     params:
         normalize="--normalized-counts" if config["mpralib_normalized_counts"] else "",
         bc_threshold=1,
-        barcodes=lambda wc: "--barcodes" if wc.method == "bcalm" else "--oligos",
+        barcodes=lambda wc: f"--{wc.level}s",
     shell:
         """
         mpralib sequence-design get-counts \
@@ -35,22 +35,22 @@ rule run_elements_quantification:
     resources:
         # Adjust memory based on input size
         mem_mb=lambda wc, input, attempt: calc_mem_gb(
-            input[0], 450 if wc.method == "bcalm" else 50, attempt
+            input[0], 450 if wc.level == "barcode" else 50, attempt
         )
         * 1024,
     retries: 3
     input:
-        element_counts="results/{id}/quantification/{id}.{method}.element.input.tsv.gz",
+        element_counts="results/{id}/quantification/{id}.{level}.element.input.tsv.gz",
         labels=config.get("label_file", "UNKNOWN_LABEL_FILE"),
-        script=lambda wc: getScript(f"{wc.method}_elements.R"),
+        script=lambda wc: getScript(f"{wc.level}_level_elements.R"),
     output:
-        result="results/{id}/quantification/{id}.{method}.element.output.tsv.gz",
-        vulcano_plot="results/{id}/quantification/{id}.{method}.element.vulcano.png",
-        density_plot="results/{id}/quantification/{id}.{method}.element.density.png",
+        result="results/{id}/quantification/{id}.{level}.element.output.tsv.gz",
+        volcano_plot="results/{id}/quantification/{id}.{level}.element.volcano.png",
+        density_plot="results/{id}/quantification/{id}.{level}.element.density.png",
     log:
-        "logs/elements/run_elements_quantification.{id}.{method}.log",
+        "logs/elements/run_elements_quantification.{id}.{level}.log",
     benchmark:
-        "benchmarks/elements/run_elements_quantification.{id}.{method}.tsv"
+        "benchmarks/elements/run_elements_quantification.{id}.{level}.tsv"
     params:
         normalize="FALSE" if config["mpralib_normalized_counts"] else "TRUE",
         control_label=config.get("control_label", "UNKNOWN_CONTROL_LABEL"),
@@ -63,7 +63,7 @@ rule run_elements_quantification:
         --normalize {params.normalize} \
         --output {output.result} \
         --output-density-plot {output.density_plot} \
-        --output-vulcano-plot {output.vulcano_plot} > {log} 2>&1
+        --output-volcano-plot {output.volcano_plot} > {log} 2>&1
         """
 
 
@@ -76,15 +76,15 @@ rule get_reporter_elements:
     resources:
         mem_mb=lambda wc, input: calc_mem_gb(input[0], 50) * 1024,  # Adjust memory based on input size
     input:
-        quantification="results/{id}/quantification/{id}.{method}.element.output.tsv.gz",
+        quantification="results/{id}/quantification/{id}.{level}.element.output.tsv.gz",
         counts=config["count_file"],
         sequence_design=config["sequence_design_file"],
     output:
-        "results/{id}/reporter_elements/{id}.reporter_elements.{method}.tsv.gz",
+        "results/{id}/reporter_elements/{id}.reporter_elements.{level}.tsv.gz",
     log:
-        "logs/elements/get_reporter_elements.{id}.{method}.log",
+        "logs/elements/get_reporter_elements.{id}.{level}.log",
     benchmark:
-        "benchmarks/elements/get_reporter_elements.{id}.{method}.tsv"
+        "benchmarks/elements/get_reporter_elements.{id}.{level}.tsv"
     wildcard_constraints:
         format="(reporter_elements)|(reporter_genomic_elements)",
     params:
@@ -109,15 +109,15 @@ rule get_reporter_genomic_elements:
     resources:
         mem_mb=lambda wc, input: calc_mem_gb(input[0], 50) * 1024,  # Adjust memory based on input size
     input:
-        quantification="results/{id}/quantification/{id}.{method}.element.output.tsv.gz",
+        quantification="results/{id}/quantification/{id}.{level}.element.output.tsv.gz",
         counts=config["count_file"],
         sequence_design=config["sequence_design_file"],
     output:
-        "results/{id}/reporter_genomic_elements/{id}.reporter_genomic_elements.{method}.bed.gz",
+        "results/{id}/reporter_genomic_elements/{id}.reporter_genomic_elements.{level}.bed.gz",
     log:
-        "logs/elements/get_reporter_genomic_elements.{id}.{method}.log",
+        "logs/elements/get_reporter_genomic_elements.{id}.{level}.log",
     benchmark:
-        "benchmarks/elements/get_reporter_genomic_elements.{id}.{method}.tsv"
+        "benchmarks/elements/get_reporter_genomic_elements.{id}.{level}.tsv"
     params:
         bc_threshold=10,
         reference="GRCh38",

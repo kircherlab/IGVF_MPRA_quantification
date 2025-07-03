@@ -42,22 +42,22 @@ bcs <- ncol(dna_var) / nr_reps
 design <- data.frame(intcpt = 1, alt = grepl("alt", colnames(mpraset)))
 block_vector <- rep(1:nr_reps, each = bcs)
 mpralm_fit_var <- mpralm(
-    object = mpraset, design = design, aggregate = "none",
-    normalize = args$normalize, model_type = "corr_groups", plot = FALSE, block = block_vector
+  object = mpraset, design = design, aggregate = "none",
+  normalize = args$normalize, model_type = "corr_groups", plot = FALSE, block = block_vector
 )
 
 message("Get variant statistics...")
 mpra_variants <- topTable(mpralm_fit_var, coef = 2, number = Inf, confint = TRUE)
 
 if (!is.null(args$output_plot)) {
-    p <- ggplot(mpra_variants, aes(x = logFC, y = -log10(adj.P.Val))) +
-        geom_point(alpha = 0.5) +
-        geom_hline(yintercept = 2, linetype = "dashed", color = "red") +
-        geom_point(data = subset(mpra_variants, adj.P.Val < 0.01), aes(x = logFC, y = -log10(adj.P.Val)), color = "red") +
-        labs(x = "log2 fold change", y = "-log10(p-value)") +
-        theme_minimal()
+  p <- ggplot(mpra_variants, aes(x = logFC, y = -log10(adj.P.Val))) +
+    geom_point(alpha = 0.5) +
+    geom_hline(yintercept = 2, linetype = "dashed", color = "red") +
+    geom_point(data = subset(mpra_variants, adj.P.Val < 0.01), aes(x = logFC, y = -log10(adj.P.Val)), color = "red") +
+    labs(x = "log2 fold change", y = "-log10(p-value)") +
+    theme_minimal()
 
-    ggsave(filename = args$output_plot, plot = p, width = 8, height = 6)
+  ggsave(filename = args$output_plot, plot = p, width = 8, height = 6)
 }
 
 names <- c("ID", colnames(mpra_variants))
