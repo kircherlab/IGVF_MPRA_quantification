@@ -9,7 +9,7 @@ parser$add_argument("--normalize", type = "logical", default = TRUE, help = "Whe
 
 args <- parser$parse_args()
 
-suppressPackageStartupMessages(library(mpra))
+suppressPackageStartupMessages(library(BCalm))
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(tidyr))
@@ -27,44 +27,44 @@ colnames(rna_var) <- gsub("rna_", "", colnames(rna_var))
 
 # create the MPRASet object
 mpraset <- MPRASet(
-    DNA = dna_var,
-    RNA = rna_var,
-    eid = rownames(dna_var),
-    eseq = NULL,
-    barcode = NULL
+  DNA = dna_var,
+  RNA = rna_var,
+  eid = rownames(dna_var),
+  eseq = NULL,
+  barcode = NULL
 )
 
 # create the design matrix
 design <- data.frame(
-    intcpt = 1,
-    alleleB <- grepl("ALT", colnames(dna_var))
+  intcpt = 1,
+  alleleB <- grepl("ALT", colnames(dna_var))
 )
 # create the block vector
 block_vector <- rep(1:(ncol(dna_var) / 2), each = 2)
 
 # run the mpralm analysis
 mpralm_allele_fit <- mpralm(
-    object = mpraset,
-    design = design,
-    aggregate = "none",
-    normalize = args$normalize,
-    block = block_vector,
-    model_type = "corr_groups",
-    plot <- FALSE
+  object = mpraset,
+  design = design,
+  aggregate = "none",
+  normalize = args$normalize,
+  block = block_vector,
+  model_type = "corr_groups",
+  plot <- FALSE
 )
 
 mpra_variants <- topTable(mpralm_allele_fit, coef = 2, number = Inf, confint = TRUE)
 
 
 if (!is.null(args$output_plot)) {
-    p <- ggplot(mpra_variants, aes(x = logFC, y = -log10(adj.P.Val))) +
-        geom_point(alpha = 0.5) +
-        geom_hline(yintercept = 2, linetype = "dashed", color = "red") +
-        geom_point(data = subset(mpra_variants, adj.P.Val < 0.01), aes(x = logFC, y = -log10(adj.P.Val)), color = "red") +
-        labs(x = "log2 fold change", y = "-log10(p-value)") +
-        theme_minimal()
+  p <- ggplot(mpra_variants, aes(x = logFC, y = -log10(adj.P.Val))) +
+    geom_point(alpha = 0.5) +
+    geom_hline(yintercept = 2, linetype = "dashed", color = "red") +
+    geom_point(data = subset(mpra_variants, adj.P.Val < 0.01), aes(x = logFC, y = -log10(adj.P.Val)), color = "red") +
+    labs(x = "log2 fold change", y = "-log10(p-value)") +
+    theme_minimal()
 
-    ggsave(filename = args$output_plot, plot = p, width = 8, height = 6)
+  ggsave(filename = args$output_plot, plot = p, width = 8, height = 6)
 }
 
 

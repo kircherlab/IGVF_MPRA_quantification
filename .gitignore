@@ -1,6 +1,7 @@
 .vscode/
 report.html
 logs
+benchmarks
 .cache
 !analysis/README.md
 !config

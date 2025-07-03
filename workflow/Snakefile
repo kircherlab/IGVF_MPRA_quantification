@@ -1,12 +1,18 @@
-configfile: "config/config.yaml"
+include: "rules/common.smk"
+include: "rules/variants.smk"
+include: "rules/elements.smk"
 
 
 rule all_variants:
     input:
         expand(
-            "results/{id}/{format}/{id}.{format}.{method}.tsv.gz",
-            method=config["method"],
-            format=["reporter_variants", "reporter_genomic_variants"],
+            "results/{id}/reporter_variants/{id}.reporter_variants.{level}.tsv.gz",
+            level=config["level"],
+            id=config["id"],
+        ),
+        expand(
+            "results/{id}/reporter_genomic_variants/{id}.reporter_genomic_variants.{level}.bed.gz",
+            level=config["level"],
             id=config["id"],
         ),
 
@@ -14,13 +20,12 @@ rule all_variants:
 rule all_elements:
     input:
         expand(
-            "results/{id}/{format}/{id}.{format}.{method}.tsv.gz",
-            method=config["method"],
-            format=["reporter_elements", "reporter_genomic_elements"],
+            "results/{id}/reporter_elements/{id}.reporter_elements.{level}.tsv.gz",
+            level=config["level"],
             id=config["id"],
         ),
-
-
-include: "rules/common.smk"
-include: "rules/variants.smk"
-include: "rules/elements.smk"
+        expand(
+            "results/{id}/reporter_genomic_elements/{id}.reporter_genomic_elements.{level}.bed.gz",
+            level=config["level"],
+            id=config["id"],
+        ),
