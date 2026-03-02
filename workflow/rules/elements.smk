@@ -36,7 +36,10 @@ rule run_elements_quantification:
     threads: 1
     resources:
         # Adjust memory based on input size
-        mem_mb=lambda wc, input, attempt: calc_mem_gb(input[0], 450 if wc.level == "barcode" else 50, attempt) * 1024,
+        mem_mb=lambda wc, input, attempt: calc_mem_gb(
+            input[0], 450 if wc.level == "barcode" else 50, attempt
+        )
+        * 1024,
     retries: 3
     input:
         element_counts="results/{id}/quantification/{id}.{level}.element.input.tsv.gz",
