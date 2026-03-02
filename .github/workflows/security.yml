@@ -26,13 +26,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: python
-          # Optionally specify queries: security-extended, security-and-quality
-          queries: security-and-quality
-
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
 
