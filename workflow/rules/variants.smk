@@ -19,11 +19,15 @@ rule get_variant_counts:
         normalize="--normalized-counts" if config["mpralib_normalized_counts"] else "",
         bc_threshold=1,
         barcodes=lambda wc: f"--{wc.level}s",
+        scaling_factor=config.get("scaling_factor", 1e9),
+        pseudo_count=config.get("pseudo_count", 1),
     shell:
         """
         mpralib sequence-design get-variant-counts \
         --input {input.counts} --sequence-design {input.sequence_design} \
         {params.barcodes} --bc-threshold {params.bc_threshold} {params.normalize} \
+        --scaling-factor {params.scaling_factor} \
+        --pseudo-count {params.pseudo_count} \
         --output {output.variant_counts} > {log} 2>&1
         """
 

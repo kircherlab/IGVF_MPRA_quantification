@@ -19,11 +19,13 @@ rule get_element_counts:
         normalize="--normalized-counts" if config["mpralib_normalized_counts"] else "",
         bc_threshold=1,
         barcodes=lambda wc: f"--{wc.level}s",
+        scaling_factor=config.get("scaling_factor", 1e9),
     shell:
         """
         mpralib sequence-design get-counts \
         --input {input.counts} --sequence-design {input.sequence_design} \
         {params.barcodes} --all-oligos --bc-threshold {params.bc_threshold} {params.normalize} \
+        --scaling-factor {params.scaling_factor} \
         --output {output.element_counts} > {log} 2>&1
         """
 
@@ -34,10 +36,7 @@ rule run_elements_quantification:
     threads: 1
     resources:
         # Adjust memory based on input size
-        mem_mb=lambda wc, input, attempt: calc_mem_gb(
-            input[0], 450 if wc.level == "barcode" else 50, attempt
-        )
-        * 1024,
+        mem_mb=lambda wc, input, attempt: calc_mem_gb(input[0], 450 if wc.level == "barcode" else 50, attempt) * 1024,
     retries: 3
     input:
         element_counts="results/{id}/quantification/{id}.{level}.element.input.tsv.gz",

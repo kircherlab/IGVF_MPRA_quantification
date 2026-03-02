@@ -13,8 +13,8 @@ test_oligo_3	test
 Further, it can quantify using all available barcodes per oligo (config `level=barcode`) or it can use an aggregated version (config `level=oligo`). For quantification and statistics it uses BCalm.
 
 ```text
-Keukeleire, Pia, Jonathan D. Rosen, Angelina Göbel-Knapp, Kilian Salomon, Max Schubach, and Martin Kircher. 
-"Using individual barcodes to increase quantification power of massively parallel reporter assays." 
+Keukeleire, Pia, Jonathan D. Rosen, Angelina Göbel-Knapp, Kilian Salomon, Max Schubach, and Martin Kircher.
+"Using individual barcodes to increase quantification power of massively parallel reporter assays."
 BMC Bioinformatics 26, no. 1 (2025): 52.
 ```
 
