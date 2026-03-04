@@ -1,0 +1,3 @@
+FROM quay.io/biocontainers/r-bcalm:0.100.0--r45hdfd78af_0
+
+RUN R -e "install.packages('ggplot2')"

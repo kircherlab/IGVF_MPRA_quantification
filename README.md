@@ -33,6 +33,19 @@ Input files are:
 
 Example using barcode-level quantification:
 
+conda:
+
+```bash
+snakemake --sdm conda \
+--config level=barcode \
+id=test \
+count_file=/path/to/data/reporter_experiment_barcode.tsv.gz \
+sequence_design_file=/path/to/data/mpra_library_design.tsv.gz \
+-c 1 all_variants
+```
+
+apptainer:
+
 ```bash
 snakemake --sdm apptainer \
 --config level=barcode \
@@ -61,6 +74,22 @@ Input files are:
 - `/path/to/data/mpra_library_design.tsv.gz`: contains the MPRA library sequence design file.
 
 Example using barcode-level quantification:
+
+conda:
+
+```bash
+snakemake --sdm conda \
+--config level=barcode \
+id=test \
+count_file=/path/to/data/reporter_experiment_barcode.tsv.gz \
+sequence_design_file=/path/to/data/mpra_library_design.tsv.gz \
+test_label=test \
+control_label=negative \
+label_file=/path/to/data/labels.tsv.gz \
+-c 1 all_elements
+```
+
+apptainer:
 
 ```bash
 snakemake --sdm apptainer \

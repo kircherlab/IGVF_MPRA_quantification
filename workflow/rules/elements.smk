@@ -33,6 +33,8 @@ rule get_element_counts:
 rule run_elements_quantification:
     container:
         "docker://visze/bcalm:latest"
+    conda:
+        getCondaEnv("bcalm.yaml")
     threads: 1
     resources:
         # Adjust memory based on input size
@@ -131,5 +133,5 @@ rule get_reporter_genomic_elements:
         --bc-threshold {params.bc_threshold} \
         --statistics {input.quantification} \
         --reference {params.reference} \
-        --output-reporter-genomic-elements  {output} > {log} 2>&1
+        --output-reporter-genomic-elements >(bgzip -c > {output}) > {log} 2>&1
         """

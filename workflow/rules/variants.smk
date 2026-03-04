@@ -59,6 +59,8 @@ rule get_variant_map:
 rule run_variants_barcode_quantification:
     container:
         "docker://visze/bcalm:latest"
+    conda:
+        getCondaEnv("bcalm.yaml")
     threads: 1
     resources:
         mem_mb=lambda wc, input, attempt: calc_mem_gb(input[0], 450, attempt) * 1024,  # Adjust memory based on input size
@@ -88,6 +90,8 @@ rule run_variants_barcode_quantification:
 rule run_variants_oligo_quantification:
     container:
         "docker://visze/bcalm:latest"
+    conda:
+        getCondaEnv("bcalm.yaml")
     threads: 1
     resources:
         mem_mb=lambda wc, input, attempt: calc_mem_gb(input[0], 70, attempt) * 1024,  # Adjust memory based on input size
@@ -115,7 +119,7 @@ rule run_variants_oligo_quantification:
 
 rule get_reporter_variants:
     container:
-        "docker://quay.io/biocontainers/mpralib:0.8.2--pyhdfd78af_0"
+        "docker://quay.io/biocontainers/mpralib:0.10.1--pyhdfd78af_0"
     conda:
         getCondaEnv("mpralib.yaml")
     threads: 1
@@ -147,8 +151,6 @@ rule get_reporter_variants:
 
 
 rule get_reporter_genomic_variants:
-    container:
-        "docker://quay.io/biocontainers/mpralib:0.8.2--pyhdfd78af_0"
     conda:
         getCondaEnv("mpralib.yaml")
     threads: 1
@@ -175,5 +177,5 @@ rule get_reporter_genomic_variants:
         --sequence-design {input.sequence_design} \
         --bc-threshold {params.bc_threshold} \
         --statistics {input.quantification} \
-        --output-reporter-genomic-variants {output} > {log} 2>&1
+        --output-reporter-genomic-variants >(bgzip -c > {output}) > {log} 2>&1
         """
