@@ -22,7 +22,7 @@ rule get_element_counts:
         scaling_factor=config.get("scaling_factor", 1e9),
     shell:
         """
-        mpralib sequence-design get-counts \
+        mpralib combine get-counts \
         --input {input.counts} --sequence-design {input.sequence_design} \
         {params.barcodes} --all-oligos --bc-threshold {params.bc_threshold} {params.normalize} \
         --scaling-factor {params.scaling_factor} \
@@ -95,7 +95,7 @@ rule get_reporter_elements:
         bc_threshold=10,
     shell:
         """
-        mpralib sequence-design get-reporter-elements \
+        mpralib combine get-reporter-elements \
         --input {input.counts} \
         --sequence-design {input.sequence_design} \
         --bc-threshold {params.bc_threshold} \
@@ -127,7 +127,7 @@ rule get_reporter_genomic_elements:
         reference="GRCh38",
     shell:
         """
-        mpralib sequence-design get-reporter-genomic-elements \
+        mpralib combine get-reporter-genomic-elements \
         --input {input.counts} \
         --sequence-design {input.sequence_design} \
         --bc-threshold {params.bc_threshold} \

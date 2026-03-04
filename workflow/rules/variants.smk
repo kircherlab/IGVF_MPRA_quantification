@@ -23,7 +23,7 @@ rule get_variant_counts:
         pseudo_count=config.get("pseudo_count", 1),
     shell:
         """
-        mpralib sequence-design get-variant-counts \
+        mpralib combine get-variant-counts \
         --input {input.counts} --sequence-design {input.sequence_design} \
         {params.barcodes} --bc-threshold {params.bc_threshold} {params.normalize} \
         --scaling-factor {params.scaling_factor} \
@@ -50,7 +50,7 @@ rule get_variant_map:
         "benchmarks/variants/get_variant_map.{id}.tsv"
     shell:
         """
-        mpralib sequence-design get-variant-map \
+        mpralib combine get-variant-map \
         --sequence-design {input.sequence_design} \
         --output {output.variant_map} > {log} 2>&1
         """
@@ -141,7 +141,7 @@ rule get_reporter_variants:
         bc_threshold=10,
     shell:
         """
-        mpralib sequence-design get-reporter-variants \
+        mpralib combine get-reporter-variants \
         --input {input.counts} \
         --sequence-design {input.sequence_design} \
         --bc-threshold {params.bc_threshold} \
@@ -172,7 +172,7 @@ rule get_reporter_genomic_variants:
         bc_threshold=10,
     shell:
         """
-        mpralib sequence-design get-reporter-genomic-variants \
+        mpralib combine get-reporter-genomic-variants \
         --input {input.counts} \
         --sequence-design {input.sequence_design} \
         --bc-threshold {params.bc_threshold} \
