@@ -5,3 +5,4 @@ channels:
 dependencies:
   - r-bcalm==0.100.0
   - r-ggplot2
+  - r-argparse
