@@ -4,7 +4,7 @@
     "pull-request-title-pattern": "chore${scope}: release${component} ${version}",
     "packages": {
         ".": {
-            "package-name": "IGVF MPRA quantification",
+            "package-name": "IGVF_MPRA_quantification",
             "release-type": "simple",
             "bump-minor-pre-major": true,
             "bump-patch-for-minor-pre-major": true,
