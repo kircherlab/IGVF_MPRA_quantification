@@ -1,6 +1,6 @@
 rule get_variant_counts:
     container:
-        "docker://quay.io/biocontainers/mpralib:0.8.2--pyhdfd78af_0"
+        "docker://quay.io/biocontainers/mpralib:0.10.3--pyhdfd78af_0"
     conda:
         getCondaEnv("mpralib.yaml")
     threads: 1
@@ -34,7 +34,7 @@ rule get_variant_counts:
 
 rule get_variant_map:
     container:
-        "docker://quay.io/biocontainers/mpralib:0.8.2--pyhdfd78af_0"
+        "docker://quay.io/biocontainers/mpralib:0.10.3--pyhdfd78af_0"
     conda:
         getCondaEnv("mpralib.yaml")
     threads: 1
