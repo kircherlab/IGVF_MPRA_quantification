@@ -14,6 +14,10 @@ parser$add_argument("--output", type = "character", required = TRUE, help = "Pat
 parser$add_argument("--output-volcano-plot", type = "character", required = FALSE, help = "Path to store the volcano plot")
 parser$add_argument("--output-density-plot", type = "character", required = FALSE, help = "Path to store the density plot")
 parser$add_argument("--normalize", type = "logical", default = TRUE, help = "Whether to normalize the data (TRUE or FALSE)")
+parser$add_argument("--normalize-size",
+  type = "double", default = 1e9,
+  help = "Scaling factor for normalization (default is 1e9)"
+)
 
 args <- parser$parse_args()
 
@@ -130,6 +134,7 @@ fit_elem <- mpralm(
   design = design,
   aggregate = "none",
   normalize = args$normalize,
+  normalizeSize = args$normalize_size,
   model_type = "indep_groups",
   plot <- FALSE
 )

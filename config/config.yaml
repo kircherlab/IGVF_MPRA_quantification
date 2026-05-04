@@ -1,5 +1,5 @@
 ---
 level: barcode
-mpralib_normalized_counts: true
-scaling_factor: 1e9
+mpralib_normalized_counts: false
+scaling_factor: 1e12
 pseudo_count: 1

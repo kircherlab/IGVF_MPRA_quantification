@@ -1,5 +1,7 @@
 import os, math
 
+from snakemake.utils import validate
+
 SCRIPTS_DIR = "../scripts"
 ENVS_DIR = "../envs"
 
@@ -36,4 +38,19 @@ def calc_mem_gb(input_file, scaling_factor=10, attemt=1):
     return max(mem_gb, 1) * attemt
 
 
-configfile: getWorkflowFile("../../config", "config.yaml")
+# Workaround: validate() is broken from Snakemake 9.5.1 to snakemake 9.14.7 in remote jobs
+if version.parse(snakemake.__version__) >= version.parse("9.5.1") and version.parse(
+    snakemake.__version__
+) <= version.parse("9.14.7"):
+    from snakemake_interface_executor_plugins.settings import ExecMode
+
+    # Use the global 'workflow' variable directly as recommended by Snakemake
+    if workflow.remote_exec:
+        old_exec_mode = workflow.exec_mode
+        workflow.workflow_settings.exec_mode = ExecMode.DEFAULT
+        validate(config, schema="../schemas/config.schema.yml")
+        workflow.workflow_settings.exec_mode = old_exec_mode
+    else:
+        validate(config, schema="../schemas/config.schema.yml")
+else:
+    validate(config, schema="../schemas/config.schema.yml")

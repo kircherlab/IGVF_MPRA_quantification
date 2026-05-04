@@ -7,6 +7,10 @@ parser$add_argument("--map", type = "character", required = TRUE, help = "Path t
 parser$add_argument("--output", type = "character", required = TRUE, help = "Path to the output file")
 parser$add_argument("--output-plot", type = "character", required = FALSE, help = "Path to the output file")
 parser$add_argument("--normalize", type = "logical", default = TRUE, help = "Whether to normalize the data (TRUE or FALSE)")
+parser$add_argument("--normalize-size",
+  type = "double", default = 1e9,
+  help = "Scaling factor for normalization (default is 1e9)"
+)
 
 args <- parser$parse_args()
 
@@ -25,7 +29,7 @@ counts_df <- read.table(args$counts, header = TRUE, sep = "\t", fill = TRUE, c("
 colnames(counts_df)[1:2] <- c("Barcode", "name")
 
 message("map file: ", args$map)
-variant_map <- read.table(args$map, header = TRUE)
+variant_map <- read.table(args$map, header = TRUE, sep = "\t")
 
 var_df <- create_var_df(counts_df, variant_map)
 
@@ -42,8 +46,14 @@ bcs <- ncol(dna_var) / nr_reps
 design <- data.frame(intcpt = 1, alt = grepl("alt", colnames(mpraset)))
 block_vector <- rep(1:nr_reps, each = bcs)
 mpralm_fit_var <- mpralm(
-  object = mpraset, design = design, aggregate = "none",
-  normalize = args$normalize, model_type = "corr_groups", plot = FALSE, block = block_vector
+  object = mpraset,
+  design = design,
+  aggregate = "none",
+  normalize = args$normalize,
+  normalizeSize = args$normalize_size,
+  model_type = "corr_groups",
+  plot = FALSE,
+  block = block_vector
 )
 
 message("Get variant statistics...")

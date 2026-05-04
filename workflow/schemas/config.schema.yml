@@ -1,0 +1,72 @@
+---
+$schema: https://json-schema.org/draft/2020-12/schema
+title: IGVF MPRA Quantification Snakemake config
+type: object
+additionalProperties: false
+properties:
+  id:
+    type: string
+    minLength: 1
+    description: Run identifier used in output paths.
+  level:
+    type: string
+    enum:
+      - barcode
+      - oligo
+    default: barcode
+    description: Quantification level.
+  count_file:
+    type: string
+    minLength: 1
+    description: Reporter experiment barcode count file.
+  sequence_design_file:
+    type: string
+    minLength: 1
+    description: MPRA library sequence design file.
+  label_file:
+    type: string
+    minLength: 1
+    description: Label file required for element quantification.
+  test_label:
+    type: string
+    minLength: 1
+    description: Test label ID used in element quantification.
+  control_label:
+    type: string
+    minLength: 1
+    description: Control label ID used in element quantification.
+  mpralib_normalized_counts:
+    type: boolean
+    default: false
+    description: Whether mpralib should use normalized counts.
+  scaling_factor:
+    type: number
+    exclusiveMinimum: 0
+    default: 1000000000000
+    description: Scaling factor used for normalized count calculations.
+  pseudo_count:
+    type: number
+    minimum: 0
+    default: 1
+    description: Pseudo count added during variant counting.
+required:
+  - id
+  - count_file
+  - sequence_design_file
+oneOf:
+  - title: Variants route
+    description: Input requirements for variant quantification.
+    not:
+      anyOf:
+        - required:
+            - label_file
+        - required:
+            - test_label
+        - required:
+            - control_label
+  - title: Elements route
+    description: Input requirements for element quantification.
+    required:
+      - label_file
+      - test_label
+      - control_label

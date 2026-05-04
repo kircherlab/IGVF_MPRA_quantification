@@ -78,11 +78,12 @@ rule run_variants_barcode_quantification:
         mem_mb=lambda wc, input, attempt: calc_mem_gb(input[0], 450, attempt) * 1024,  # Adjust memory based on input size
     params:
         normalize="FALSE" if config["mpralib_normalized_counts"] else "TRUE",
+        normalize_size=config.get("scaling_factor", 1e9),
     shell:
         """
         Rscript {input.script} \
         --count {input.variant_counts} --map {input.variant_map} \
-        --normalize {params.normalize} \
+        --normalize {params.normalize} --normalize-size {params.normalize_size} \
         --output {output.result} --output-plot {output.volcano_plot} > {log} 2>&1
         """
 
@@ -93,7 +94,7 @@ rule run_variants_oligo_quantification:
         script=getScript("oligo_level_variants.R"),
     output:
         result="results/{id}/quantification/{id}.oligo.variant.output.tsv.gz",
-        vulcano_plot="results/{id}/quantification/{id}.oligo.variant.vulcano.png",
+        volcano_plot="results/{id}/quantification/{id}.oligo.variant.volcano.png",
     log:
         "logs/variants/run_variants_oligo_quantification.{id}.log",
     benchmark:
@@ -108,12 +109,13 @@ rule run_variants_oligo_quantification:
         mem_mb=lambda wc, input, attempt: calc_mem_gb(input[0], 70, attempt) * 1024,  # Adjust memory based on input size
     params:
         normalize="FALSE" if config["mpralib_normalized_counts"] else "TRUE",
+        normalize_size=config.get("scaling_factor", 1e9),
     shell:
         """
         Rscript {input.script} \
         --count {input.variant_counts} \
-        --normalize {params.normalize} \
-        --output {output.result} --output-plot {output.vulcano_plot} > {log} 2>&1
+        --normalize {params.normalize} --normalize-size {params.normalize_size} \
+        --output {output.result} --output-plot {output.volcano_plot} > {log} 2>&1
         """
 
 

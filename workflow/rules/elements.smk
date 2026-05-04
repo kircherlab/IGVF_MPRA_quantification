@@ -57,6 +57,7 @@ rule run_elements_quantification:
         * 1024,
     params:
         normalize="FALSE" if config["mpralib_normalized_counts"] else "TRUE",
+        normalize_size=config.get("scaling_factor", 1e9),
         control_label=config.get("control_label", "UNKNOWN_CONTROL_LABEL"),
         test_label=config.get("test_label", "UNKNOWN_TEST_LABEL"),
     shell:
@@ -64,7 +65,7 @@ rule run_elements_quantification:
         Rscript {input.script} \
         --count {input.element_counts} --labels {input.labels} \
         --test-label {params.test_label} --control-label {params.control_label} \
-        --normalize {params.normalize} \
+        --normalize {params.normalize} --normalize-size {params.normalize_size} \
         --output {output.result} \
         --output-density-plot {output.density_plot} \
         --output-volcano-plot {output.volcano_plot} > {log} 2>&1
