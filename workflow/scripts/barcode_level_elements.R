@@ -56,7 +56,7 @@ fit_elem <- fit_elements(
   object = mpraset,
   normalize = args$normalize,
   normalizeSize = args$normalize_size,
-  block = block_vector, 
+  block = block_vector,
   plot = FALSE
 )
 
