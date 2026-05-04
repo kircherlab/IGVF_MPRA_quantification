@@ -18,11 +18,79 @@ parser$add_argument("--normalize", type = "logical", default = TRUE, help = "Whe
 args <- parser$parse_args()
 
 suppressPackageStartupMessages(library(mpra))
-suppressPackageStartupMessages(library(BCalm))
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(tidyr))
 suppressPackageStartupMessages(library(tibble))
+
+
+mpra_treat <- function( # nolint: cyclocomp_linter.
+  fit, percentile = 0.975, neg_label, trend = FALSE, robust = FALSE, winsor_tail_p = c(0.05, 0.1)
+) {
+  # 	Check fit
+  if (is(fit, "MPRASet")) {
+    mpra <- attr(fit, "MArrayLM")
+    mpra$logFC <- rowData(fit)$logFC
+    mpra$label <- getLabel(fit)
+    fit <- mpra
+  }
+  if (!is(fit, "MArrayLM")) stop("fit must be an MArrayLM object")
+  if (is.null(fit$coefficients)) stop("coefficients not found in fit object")
+  if (is.null(fit$stdev.unscaled)) stop("stdev.unscaled not found in fit object")
+  if (is.null(fit$label)) stop("Your mpra fit object should contain a label column.")
+
+  fit$lods <- NULL
+
+  neg_mean <- mean(fit$coefficients[fit$label == neg_label])
+
+  coefficients <- as.matrix(fit$coefficients - neg_mean)
+  coefficients_neg <- as.matrix(fit$coefficients[fit$label == neg_label] - neg_mean)
+
+  stdev_unscaled <- as.matrix(fit$stdev.unscaled)
+  sigma <- fit$sigma
+  df_residual <- fit$df.residual
+  if (is.null(coefficients) || is.null(stdev_unscaled) || is.null(sigma) || is.null(df_residual)) {
+    stop("No data, or argument is not a valid lmFit object")
+  }
+  if (max(df_residual) == 0) {
+    stop("No residual degrees of freedom in linear model fits")
+  }
+  if (!any(is.finite(sigma))) {
+    stop("No finite residual standard deviations")
+  }
+  if (trend) {
+    covariate <- fit$Amean
+    if (is.null(covariate)) stop("Need Amean component in fit to estimate trend")
+  } else {
+    covariate <- NULL
+  }
+  sv <- squeezeVar(sigma^2, df_residual, covariate = covariate, robust = robust, winsor.tail.p = winsor_tail_p)
+  fit$df.prior <- sv$df.prior
+  fit$s2.prior <- sv$var.prior
+  fit$s2.post <- sv$var.post
+  df_total <- df_residual + sv$df.prior
+  df_pooled <- sum(df_residual, na.rm = TRUE)
+  df_total <- pmin(df_total, df_pooled)
+  fit$df.total <- df_total
+
+  acoef <- abs(coefficients)
+  se <- stdev_unscaled * sqrt(fit$s2.post)
+  lfc_right <- quantile(coefficients_neg, percentile)
+  lfc_left <- quantile(coefficients_neg, 1 - percentile)
+  tstat_right <- (acoef - lfc_right) / se
+  tstat_left <- (acoef - lfc_left) / se
+  fit$t <- array(0, dim(coefficients), dimnames = dimnames(coefficients))
+  fit$p.value <- pt(tstat_right, df = df_total, lower.tail = FALSE) + pt(tstat_left, df = df_total, lower.tail = FALSE)
+  tstat_right <- pmax(tstat_right, 0)
+  tstat_left <- pmax(tstat_left, 0)
+  fc_up <- (coefficients > lfc_right)
+  fc_down <- (coefficients < lfc_left)
+  fit$t[fc_up] <- tstat_right[fc_up]
+  fit$t[fc_down] <- tstat_left[fc_down]
+  fit$treat.lfc_right <- lfc_right
+  fit$treat.lfc_left <- lfc_left
+  fit
+}
 
 
 # read in the data

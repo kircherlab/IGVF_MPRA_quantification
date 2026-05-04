@@ -1,6 +1,6 @@
 rule get_variant_counts:
     container:
-        "docker://quay.io/biocontainers/mpralib:0.8.2--pyhdfd78af_0"
+        "docker://quay.io/biocontainers/mpralib:0.10.3--pyhdfd78af_0"
     conda:
         getCondaEnv("mpralib.yaml")
     threads: 1
@@ -19,18 +19,22 @@ rule get_variant_counts:
         normalize="--normalized-counts" if config["mpralib_normalized_counts"] else "",
         bc_threshold=1,
         barcodes=lambda wc: f"--{wc.level}s",
+        scaling_factor=config.get("scaling_factor", 1e9),
+        pseudo_count=config.get("pseudo_count", 1),
     shell:
         """
-        mpralib sequence-design get-variant-counts \
+        mpralib combine get-variant-counts \
         --input {input.counts} --sequence-design {input.sequence_design} \
         {params.barcodes} --bc-threshold {params.bc_threshold} {params.normalize} \
+        --scaling-factor {params.scaling_factor} \
+        --pseudo-count {params.pseudo_count} \
         --output {output.variant_counts} > {log} 2>&1
         """
 
 
 rule get_variant_map:
     container:
-        "docker://quay.io/biocontainers/mpralib:0.8.2--pyhdfd78af_0"
+        "docker://quay.io/biocontainers/mpralib:0.10.3--pyhdfd78af_0"
     conda:
         getCondaEnv("mpralib.yaml")
     threads: 1
@@ -46,7 +50,7 @@ rule get_variant_map:
         "benchmarks/variants/get_variant_map.{id}.tsv"
     shell:
         """
-        mpralib sequence-design get-variant-map \
+        mpralib combine get-variant-map \
         --sequence-design {input.sequence_design} \
         --output {output.variant_map} > {log} 2>&1
         """
@@ -55,6 +59,8 @@ rule get_variant_map:
 rule run_variants_barcode_quantification:
     container:
         "docker://visze/bcalm:latest"
+    conda:
+        getCondaEnv("bcalm.yaml")
     threads: 1
     resources:
         mem_mb=lambda wc, input, attempt: calc_mem_gb(input[0], 450, attempt) * 1024,  # Adjust memory based on input size
@@ -84,6 +90,8 @@ rule run_variants_barcode_quantification:
 rule run_variants_oligo_quantification:
     container:
         "docker://visze/bcalm:latest"
+    conda:
+        getCondaEnv("bcalm.yaml")
     threads: 1
     resources:
         mem_mb=lambda wc, input, attempt: calc_mem_gb(input[0], 70, attempt) * 1024,  # Adjust memory based on input size
@@ -111,7 +119,7 @@ rule run_variants_oligo_quantification:
 
 rule get_reporter_variants:
     container:
-        "docker://quay.io/biocontainers/mpralib:0.8.2--pyhdfd78af_0"
+        "docker://quay.io/biocontainers/mpralib:0.10.1--pyhdfd78af_0"
     conda:
         getCondaEnv("mpralib.yaml")
     threads: 1
@@ -133,7 +141,7 @@ rule get_reporter_variants:
         bc_threshold=10,
     shell:
         """
-        mpralib sequence-design get-reporter-variants \
+        mpralib combine get-reporter-variants \
         --input {input.counts} \
         --sequence-design {input.sequence_design} \
         --bc-threshold {params.bc_threshold} \
@@ -143,8 +151,6 @@ rule get_reporter_variants:
 
 
 rule get_reporter_genomic_variants:
-    container:
-        "docker://quay.io/biocontainers/mpralib:0.8.2--pyhdfd78af_0"
     conda:
         getCondaEnv("mpralib.yaml")
     threads: 1
@@ -166,10 +172,10 @@ rule get_reporter_genomic_variants:
         bc_threshold=10,
     shell:
         """
-        mpralib sequence-design get-reporter-genomic-variants \
+        mpralib combine get-reporter-genomic-variants \
         --input {input.counts} \
         --sequence-design {input.sequence_design} \
         --bc-threshold {params.bc_threshold} \
         --statistics {input.quantification} \
-        --output-reporter-genomic-variants {output} > {log} 2>&1
+        --output-reporter-genomic-variants >(bgzip -c > {output}) > {log} 2>&1
         """

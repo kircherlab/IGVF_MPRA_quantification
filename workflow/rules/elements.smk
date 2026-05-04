@@ -1,6 +1,6 @@
 rule get_element_counts:
     container:
-        "docker://quay.io/biocontainers/mpralib:0.8.2--pyhdfd78af_0"
+        "docker://quay.io/biocontainers/mpralib:0.10.3--pyhdfd78af_0"
     conda:
         getCondaEnv("mpralib.yaml")
     threads: 1
@@ -19,11 +19,13 @@ rule get_element_counts:
         normalize="--normalized-counts" if config["mpralib_normalized_counts"] else "",
         bc_threshold=1,
         barcodes=lambda wc: f"--{wc.level}s",
+        scaling_factor=config.get("scaling_factor", 1e9),
     shell:
         """
-        mpralib sequence-design get-counts \
+        mpralib combine get-counts \
         --input {input.counts} --sequence-design {input.sequence_design} \
         {params.barcodes} --all-oligos --bc-threshold {params.bc_threshold} {params.normalize} \
+        --scaling-factor {params.scaling_factor} \
         --output {output.element_counts} > {log} 2>&1
         """
 
@@ -31,6 +33,8 @@ rule get_element_counts:
 rule run_elements_quantification:
     container:
         "docker://visze/bcalm:latest"
+    conda:
+        getCondaEnv("bcalm.yaml")
     threads: 1
     resources:
         # Adjust memory based on input size
@@ -69,7 +73,7 @@ rule run_elements_quantification:
 
 rule get_reporter_elements:
     container:
-        "docker://quay.io/biocontainers/mpralib:0.8.2--pyhdfd78af_0"
+        "docker://quay.io/biocontainers/mpralib:0.10.3--pyhdfd78af_0"
     conda:
         getCondaEnv("mpralib.yaml")
     threads: 1
@@ -91,7 +95,7 @@ rule get_reporter_elements:
         bc_threshold=10,
     shell:
         """
-        mpralib sequence-design get-reporter-elements \
+        mpralib combine get-reporter-elements \
         --input {input.counts} \
         --sequence-design {input.sequence_design} \
         --bc-threshold {params.bc_threshold} \
@@ -102,7 +106,7 @@ rule get_reporter_elements:
 
 rule get_reporter_genomic_elements:
     container:
-        "docker://quay.io/biocontainers/mpralib:0.8.2--pyhdfd78af_0"
+        "docker://quay.io/biocontainers/mpralib:0.10.3--pyhdfd78af_0"
     conda:
         getCondaEnv("mpralib.yaml")
     threads: 1
@@ -123,11 +127,11 @@ rule get_reporter_genomic_elements:
         reference="GRCh38",
     shell:
         """
-        mpralib sequence-design get-reporter-genomic-elements \
+        mpralib combine get-reporter-genomic-elements \
         --input {input.counts} \
         --sequence-design {input.sequence_design} \
         --bc-threshold {params.bc_threshold} \
         --statistics {input.quantification} \
         --reference {params.reference} \
-        --output-reporter-genomic-elements  {output} > {log} 2>&1
+        --output-reporter-genomic-elements >(bgzip -c > {output}) > {log} 2>&1
         """

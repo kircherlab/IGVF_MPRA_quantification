@@ -9,7 +9,7 @@ parser$add_argument("--normalize", type = "logical", default = TRUE, help = "Whe
 
 args <- parser$parse_args()
 
-suppressPackageStartupMessages(library(BCalm))
+suppressPackageStartupMessages(library(mpra))
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(tidyr))
