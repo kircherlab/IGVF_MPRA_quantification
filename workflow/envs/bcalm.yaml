@@ -3,6 +3,6 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - python>=3.10
-  - mpralib==0.10.4
-  - htslib
+  - r-bcalm==0.100.0
+  - r-ggplot2
+  - r-argparse

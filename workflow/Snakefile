@@ -1,6 +1,20 @@
+##########################
+#### Version ####
+##########################
+from packaging import version
+
+f = open(workflow.source_path("../version.txt"))
+__version__ = version.parse(f.read().strip())
+
+print(f"\033[95mRunning MPRA QC analysis version {__version__.public}\033[0m")
+
+
 include: "rules/common.smk"
 include: "rules/variants.smk"
 include: "rules/elements.smk"
+
+
+print(f"\033[95mID:\033[92m {config['id']}\033[0m")
 
 
 rule all_variants:

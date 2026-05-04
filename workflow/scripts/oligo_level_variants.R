@@ -6,10 +6,14 @@ parser$add_argument("--counts", type = "character", required = TRUE, help = "Pat
 parser$add_argument("--output", type = "character", required = TRUE, help = "Path to the output file")
 parser$add_argument("--output-plot", type = "character", required = FALSE, help = "Path to the output file")
 parser$add_argument("--normalize", type = "logical", default = TRUE, help = "Whether to normalize the data (TRUE or FALSE)")
+parser$add_argument("--normalize-size",
+  type = "double", default = 1e9,
+  help = "Scaling factor for normalization (default is 1e9)"
+)
 
 args <- parser$parse_args()
 
-suppressPackageStartupMessages(library(BCalm))
+suppressPackageStartupMessages(library(mpra))
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(tidyr))
@@ -37,7 +41,7 @@ mpraset <- MPRASet(
 # create the design matrix
 design <- data.frame(
   intcpt = 1,
-  alleleB <- grepl("ALT", colnames(dna_var))
+  alleleB = grepl("ALT", colnames(dna_var))
 )
 # create the block vector
 block_vector <- rep(1:(ncol(dna_var) / 2), each = 2)
@@ -48,9 +52,10 @@ mpralm_allele_fit <- mpralm(
   design = design,
   aggregate = "none",
   normalize = args$normalize,
+  normalizeSize = args$normalize_size,
   block = block_vector,
   model_type = "corr_groups",
-  plot <- FALSE
+  plot = FALSE
 )
 
 mpra_variants <- topTable(mpralm_allele_fit, coef = 2, number = Inf, confint = TRUE)

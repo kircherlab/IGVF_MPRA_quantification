@@ -13,8 +13,8 @@ test_oligo_3	test
 Further, it can quantify using all available barcodes per oligo (config `level=barcode`) or it can use an aggregated version (config `level=oligo`). For quantification and statistics it uses BCalm.
 
 ```text
-Keukeleire, Pia, Jonathan D. Rosen, Angelina Göbel-Knapp, Kilian Salomon, Max Schubach, and Martin Kircher. 
-"Using individual barcodes to increase quantification power of massively parallel reporter assays." 
+Keukeleire, Pia, Jonathan D. Rosen, Angelina Göbel-Knapp, Kilian Salomon, Max Schubach, and Martin Kircher.
+"Using individual barcodes to increase quantification power of massively parallel reporter assays."
 BMC Bioinformatics 26, no. 1 (2025): 52.
 ```
 
@@ -32,6 +32,19 @@ Input files are:
 - `/path/to/data/mpra_library_design.tsv.gz`: contains the MPRA library sequence design file.
 
 Example using barcode-level quantification:
+
+conda:
+
+```bash
+snakemake --sdm conda \
+--config level=barcode \
+id=test \
+count_file=/path/to/data/reporter_experiment_barcode.tsv.gz \
+sequence_design_file=/path/to/data/mpra_library_design.tsv.gz \
+-c 1 all_variants
+```
+
+apptainer:
 
 ```bash
 snakemake --sdm apptainer \
@@ -61,6 +74,22 @@ Input files are:
 - `/path/to/data/mpra_library_design.tsv.gz`: contains the MPRA library sequence design file.
 
 Example using barcode-level quantification:
+
+conda:
+
+```bash
+snakemake --sdm conda \
+--config level=barcode \
+id=test \
+count_file=/path/to/data/reporter_experiment_barcode.tsv.gz \
+sequence_design_file=/path/to/data/mpra_library_design.tsv.gz \
+test_label=test \
+control_label=negative \
+label_file=/path/to/data/labels.tsv.gz \
+-c 1 all_elements
+```
+
+apptainer:
 
 ```bash
 snakemake --sdm apptainer \

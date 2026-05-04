@@ -1,10 +1,10 @@
 FROM bioconductor/bioconductor_docker:RELEASE_3_21
 
 
-RUN R -e "BiocManager::install('mpra')" && \
-    R -e "install.packages('argparse')" && \
+RUN R -e "install.packages('argparse')" && \
     R -e "install.packages('devtools')" && \
-    R -e "library(devtools); devtools::install_github('kircherlab/BCalm', ref = 'development')" && \
+    R -e "library(devtools); devtools::install_github('hansenlab/mpra', ref = 'devel')" && \
+    R -e "library(devtools); devtools::install_github('kircherlab/BCalm', ref = 'v0.100.0')" && \
     R -e "install.packages('dplyr')" && \
     R -e "install.packages('ggplot2')" && \
     R -e "install.packages('tidyr')" && \
