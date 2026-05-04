@@ -11,7 +11,7 @@ rule get_element_counts:
     conda:
         getCondaEnv("mpralib.yaml")
     container:
-        "docker://quay.io/biocontainers/mpralib:0.10.3--pyhdfd78af_0"
+        "docker://quay.io/biocontainers/mpralib:0.10.4--pyhdfd78af_0"
     threads: 1
     resources:
         mem_mb=lambda wc, input: calc_mem_gb(input[0], 75) * 1024,  # Adjust memory based on input size
@@ -88,7 +88,7 @@ rule get_reporter_elements:
     conda:
         getCondaEnv("mpralib.yaml")
     container:
-        "docker://quay.io/biocontainers/mpralib:0.10.3--pyhdfd78af_0"
+        "docker://quay.io/biocontainers/mpralib:0.10.4--pyhdfd78af_0"
     threads: 1
     resources:
         mem_mb=lambda wc, input: calc_mem_gb(input[0], 50) * 1024,  # Adjust memory based on input size
@@ -119,7 +119,7 @@ rule get_reporter_genomic_elements:
     conda:
         getCondaEnv("mpralib.yaml")
     container:
-        "docker://quay.io/biocontainers/mpralib:0.10.3--pyhdfd78af_0"
+        "docker://quay.io/biocontainers/mpralib:0.10.4--pyhdfd78af_0"
     threads: 1
     resources:
         mem_mb=lambda wc, input: calc_mem_gb(input[0], 50) * 1024,  # Adjust memory based on input size
