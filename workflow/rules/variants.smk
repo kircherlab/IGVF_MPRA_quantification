@@ -168,7 +168,7 @@ rule get_reporter_genomic_variants:
     conda:
         getCondaEnv("mpralib.yaml")
     container:
-        "docker://quay.io/biocontainers/mpralib:0.10.4--pyhdfd78af_0"
+        "docker://visze/mpralib:0.10.4"
     threads: 1
     resources:
         mem_mb=lambda wc, input: calc_mem_gb(input[1], 75) * 1024,  # Adjust memory based on input size
