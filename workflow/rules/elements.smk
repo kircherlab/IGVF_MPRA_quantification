@@ -51,10 +51,7 @@ rule run_elements_quantification:
     threads: 1
     resources:
         # Adjust memory based on input size
-        mem_mb=lambda wc, input, attempt: calc_mem_gb(
-            input[0], 450 if wc.level == "barcode" else 50, attempt
-        )
-        * 1024,
+        mem_mb=lambda wc, input, attempt: calc_mem_gb(input[0], 450 if wc.level == "barcode" else 50, attempt) * 1024,
     params:
         normalize="FALSE" if config["mpralib_normalized_counts"] else "TRUE",
         normalize_size=config.get("scaling_factor", 1e9),
