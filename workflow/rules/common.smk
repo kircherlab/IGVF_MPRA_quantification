@@ -4,6 +4,7 @@ from snakemake.utils import validate
 
 SCRIPTS_DIR = "../scripts"
 ENVS_DIR = "../envs"
+MPRALIB_VERSION_FILE = "../../version.mpralib.txt"
 
 
 def getWorkflowFile(dir_name, name):
@@ -16,6 +17,19 @@ def getScript(name):
 
 def getCondaEnv(name):
     return getWorkflowFile(ENVS_DIR, name)
+
+
+def getMpralibVersion():
+    with open(workflow.source_path(MPRALIB_VERSION_FILE)) as f:
+        mpralib_version = f.read().strip()
+    if not mpralib_version:
+        raise WorkflowError("version.mpralib.txt is empty.")
+    return mpralib_version
+
+
+MPRALIB_VERSION = getMpralibVersion()
+VISZE_MPRALIB_CONTAINER = f"docker://visze/mpralib:{MPRALIB_VERSION}"
+QUAY_MPRALIB_CONTAINER = f"docker://quay.io/biocontainers/mpralib:{MPRALIB_VERSION}--pyhdfd78af_0"
 
 
 def getLabelFile():
