@@ -1,3 +1,5 @@
 FROM ghcr.io/prefix-dev/pixi:latest
 
-RUN pixi global install "python>=3.10" "mpralib==0.10.4" "htslib"  conda -c conda-forge -c bioconda
+ARG MPRALIB_VERSION
+
+RUN pixi global install "python>=3.10" "mpralib==${MPRALIB_VERSION}" "htslib" conda -c conda-forge -c bioconda
