@@ -23,10 +23,10 @@ rule get_element_counts:
     shell:
         """
         mpralib combine get-counts \
-        --input {input.counts} --sequence-design {input.sequence_design} \
-        {params.barcodes} --all-oligos --bc-threshold {params.bc_threshold} {params.normalize} \
-        --scaling-factor {params.scaling_factor} \
-        --output {output.element_counts} > {log} 2>&1
+            --input {input.counts} --sequence-design {input.sequence_design} \
+            {params.barcodes} --all-oligos --bc-threshold {params.bc_threshold} {params.normalize} \
+            --scaling-factor {params.scaling_factor} \
+            --output {output.element_counts} >{log} 2>&1
         """
 
 
@@ -60,12 +60,12 @@ rule run_elements_quantification:
     shell:
         """
         Rscript {input.script} \
-        --count {input.element_counts} --labels {input.labels} \
-        --test-label {params.test_label} --control-label {params.control_label} \
-        --normalize {params.normalize} --normalize-size {params.normalize_size} \
-        --output {output.result} \
-        --output-density-plot {output.density_plot} \
-        --output-volcano-plot {output.volcano_plot} > {log} 2>&1
+            --count {input.element_counts} --labels {input.labels} \
+            --test-label {params.test_label} --control-label {params.control_label} \
+            --normalize {params.normalize} --normalize-size {params.normalize_size} \
+            --output {output.result} \
+            --output-density-plot {output.density_plot} \
+            --output-volcano-plot {output.volcano_plot} >{log} 2>&1
         """
 
 
@@ -94,11 +94,11 @@ rule get_reporter_elements:
     shell:
         """
         mpralib combine get-reporter-elements \
-        --input {input.counts} \
-        --sequence-design {input.sequence_design} \
-        --bc-threshold {params.bc_threshold} \
-        --statistics {input.quantification} \
-        --output-reporter-elements {output} > {log} 2>&1
+            --input {input.counts} \
+            --sequence-design {input.sequence_design} \
+            --bc-threshold {params.bc_threshold} \
+            --statistics {input.quantification} \
+            --output-reporter-elements {output} >{log} 2>&1
         """
 
 
@@ -126,10 +126,10 @@ rule get_reporter_genomic_elements:
     shell:
         """
         mpralib combine get-reporter-genomic-elements \
-        --input {input.counts} \
-        --sequence-design {input.sequence_design} \
-        --bc-threshold {params.bc_threshold} \
-        --statistics {input.quantification} \
-        --reference {params.reference} \
-        --output-reporter-genomic-elements >(bgzip -c > {output}) > {log} 2>&1
+            --input {input.counts} \
+            --sequence-design {input.sequence_design} \
+            --bc-threshold {params.bc_threshold} \
+            --statistics {input.quantification} \
+            --reference {params.reference} \
+            --output-reporter-genomic-elements >(bgzip -c >{output}) >{log} 2>&1
         """
