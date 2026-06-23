@@ -93,9 +93,21 @@ if (!is.null(args$output_density_plot)) {
   ggsave(filename = args$output_density_plot, plot = density_plot, width = 8, height = 6)
 }
 
-# # Re-evaluate
-tr <- mpra_treat(fit_elem, percentile, neg_label = args$control_label)
-mpra_element <- topTreat(tr, coef = 1, number = Inf)
+control_label_exists <- args$control_label %in% labels_vec
+
+if (!control_label_exists) {
+  cat("Control label not found in labels. Using topTable directly.\n")
+  mpra_element <- toptab_element
+  # Set appropriate default values for non-significant results
+  mpra_element$adj.P.Val <- 1
+  mpra_element$P.Value <- 1
+  mpra_element$t <- 0
+  mpra_element$r <- 0
+} else {
+  # Re-evaluate
+  tr <- mpra_treat(fit_elem, percentile, neg_label = args$control_label)
+  mpra_element <- topTreat(tr, coef = 1, number = Inf)
+}
 
 # Make volcano plot with cutoff of FDR < 0.01
 if (!is.null(args$output_volcano_plot)) {
