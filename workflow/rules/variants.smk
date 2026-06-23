@@ -24,11 +24,11 @@ rule get_variant_counts:
     shell:
         """
         mpralib combine get-variant-counts \
-        --input {input.counts} --sequence-design {input.sequence_design} \
-        {params.barcodes} --bc-threshold {params.bc_threshold} {params.normalize} \
-        --scaling-factor {params.scaling_factor} \
-        --pseudo-count {params.pseudo_count} \
-        --output {output.variant_counts} > {log} 2>&1
+            --input {input.counts} --sequence-design {input.sequence_design} \
+            {params.barcodes} --bc-threshold {params.bc_threshold} {params.normalize} \
+            --scaling-factor {params.scaling_factor} \
+            --pseudo-count {params.pseudo_count} \
+            --output {output.variant_counts} >{log} 2>&1
         """
 
 
@@ -51,8 +51,8 @@ rule get_variant_map:
     shell:
         """
         mpralib combine get-variant-map \
-        --sequence-design {input.sequence_design} \
-        --output {output.variant_map} > {log} 2>&1
+            --sequence-design {input.sequence_design} \
+            --output {output.variant_map} >{log} 2>&1
         """
 
 
@@ -82,9 +82,9 @@ rule run_variants_barcode_quantification:
     shell:
         """
         Rscript {input.script} \
-        --count {input.variant_counts} --map {input.variant_map} \
-        --normalize {params.normalize} --normalize-size {params.normalize_size} \
-        --output {output.result} --output-plot {output.volcano_plot} > {log} 2>&1
+            --count {input.variant_counts} --map {input.variant_map} \
+            --normalize {params.normalize} --normalize-size {params.normalize_size} \
+            --output {output.result} --output-plot {output.volcano_plot} >{log} 2>&1
         """
 
 
@@ -113,9 +113,9 @@ rule run_variants_oligo_quantification:
     shell:
         """
         Rscript {input.script} \
-        --count {input.variant_counts} \
-        --normalize {params.normalize} --normalize-size {params.normalize_size} \
-        --output {output.result} --output-plot {output.volcano_plot} > {log} 2>&1
+            --count {input.variant_counts} \
+            --normalize {params.normalize} --normalize-size {params.normalize_size} \
+            --output {output.result} --output-plot {output.volcano_plot} >{log} 2>&1
         """
 
 
@@ -144,11 +144,11 @@ rule get_reporter_variants:
     shell:
         """
         mpralib combine get-reporter-variants \
-        --input {input.counts} \
-        --sequence-design {input.sequence_design} \
-        --bc-threshold {params.bc_threshold} \
-        --statistics {input.quantification} \
-        --output-reporter-variants {output} > {log} 2>&1
+            --input {input.counts} \
+            --sequence-design {input.sequence_design} \
+            --bc-threshold {params.bc_threshold} \
+            --statistics {input.quantification} \
+            --output-reporter-variants {output} >{log} 2>&1
         """
 
 
@@ -177,9 +177,9 @@ rule get_reporter_genomic_variants:
     shell:
         """
         mpralib combine get-reporter-genomic-variants \
-        --input {input.counts} \
-        --sequence-design {input.sequence_design} \
-        --bc-threshold {params.bc_threshold} \
-        --statistics {input.quantification} \
-        --output-reporter-genomic-variants >(bgzip -c > {output}) > {log} 2>&1
+            --input {input.counts} \
+            --sequence-design {input.sequence_design} \
+            --bc-threshold {params.bc_threshold} \
+            --statistics {input.quantification} \
+            --output-reporter-genomic-variants >(bgzip -c >{output}) >{log} 2>&1
         """

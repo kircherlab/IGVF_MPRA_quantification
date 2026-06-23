@@ -34,7 +34,7 @@ repos:
         args: [--py39-plus]
 
   - repo: https://github.com/snakemake/snakefmt
-    rev: v1.1.0
+    rev: v2.0.1
     hooks:
       - id: snakefmt
 
@@ -46,7 +46,7 @@ ci:
     for more information, see https://pre-commit.ci
   autofix_prs: true
   autoupdate_branch: ''
-  autoupdate_commit_msg: 'chore(deps) pre-commit autoupdate'
+  autoupdate_commit_msg: 'chore(deps): pre-commit autoupdate'
   autoupdate_schedule: monthly
   skip: []
   submodules: false
