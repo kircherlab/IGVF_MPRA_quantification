@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.4](https://github.com/kircherlab/IGVF_MPRA_quantification/compare/v0.0.3...v0.0.4) (2026-06-23)
+
+
+### Bug Fixes
+
+* **elements:** control label cannot be present: p/Q-value will be set to 0 ([#18](https://github.com/kircherlab/IGVF_MPRA_quantification/issues/18)) ([d509524](https://github.com/kircherlab/IGVF_MPRA_quantification/commit/d5095243d91f3594f7e37ce54923da35426bfff6))
+
 ## [0.0.3](https://github.com/kircherlab/IGVF_MPRA_quantification/compare/v0.0.2...v0.0.3) (2026-05-08)
 
 
