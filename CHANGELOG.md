@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3](https://github.com/kircherlab/IGVF_MPRA_quantification/compare/v0.0.2...v0.0.3) (2026-05-08)
+
+
+### Bug Fixes
+
+* add Docker workflow and update mpralib version to 0.10.5 ([#14](https://github.com/kircherlab/IGVF_MPRA_quantification/issues/14)) ([2e98d59](https://github.com/kircherlab/IGVF_MPRA_quantification/commit/2e98d5984fa57ea3df86f9ea7efce847609a2e1a))
+
 ## [0.0.2](https://github.com/kircherlab/IGVF_MPRA_quantification/compare/v0.0.1...v0.0.2) (2026-05-04)
 
 
