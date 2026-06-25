@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.5](https://github.com/kircherlab/IGVF_MPRA_quantification/compare/v0.0.4...v0.0.5) (2026-06-25)
+
+
+### Bug Fixes
+
+* Update mpralib to 0.10.6 ([#20](https://github.com/kircherlab/IGVF_MPRA_quantification/issues/20)) ([dd17733](https://github.com/kircherlab/IGVF_MPRA_quantification/commit/dd17733bc7abed3766d83a71aebd14b68bece103))
+
 ## [0.0.4](https://github.com/kircherlab/IGVF_MPRA_quantification/compare/v0.0.3...v0.0.4) (2026-06-23)
 
 
