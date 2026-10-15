@@ -29,7 +29,14 @@ counts_df <- read.table(args$counts, header = TRUE, sep = "\t", fill = TRUE, c("
 colnames(counts_df)[1:2] <- c("Barcode", "name")
 
 message("map file: ", args$map)
-variant_map <- read.table(args$map, header = TRUE, sep = "\t")
+variant_map <- readr::read_tsv(
+  args$map,
+  col_types = readr::cols(.default = readr::col_character()),
+  na = "",
+  quote = "\"",
+  trim_ws = FALSE,
+  show_col_types = FALSE
+)
 
 var_df <- create_var_df(counts_df, variant_map)
 
