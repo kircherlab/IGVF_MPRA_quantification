@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.7](https://github.com/kircherlab/IGVF_MPRA_quantification/compare/v0.0.6...v0.0.7) (2026-10-21)
+
+
+### Bug Fixes
+
+* replace readr with read.delim. readr packacke got available ([#27](https://github.com/kircherlab/IGVF_MPRA_quantification/issues/27)) ([7b41638](https://github.com/kircherlab/IGVF_MPRA_quantification/commit/7b41638d7415168022b5818583a4b4f3000e245f))
+
 ## [0.0.6](https://github.com/kircherlab/IGVF_MPRA_quantification/compare/v0.0.5...v0.0.6) (2026-10-16)
 
 
