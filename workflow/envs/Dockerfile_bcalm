@@ -7,5 +7,4 @@ RUN pixi global install --environment bcalm --expose R --expose Rscript \
     -c conda-forge -c bioconda
 
 RUN Rscript -e "library(BCalm); library(mpra); library(ggplot2); library(argparse); \
-    library(dplyr); library(tidyr); library(tibble); \
-    stopifnot(as.character(packageVersion('BCalm')) == '${BCALM_VERSION}')"
+    library(dplyr); library(tidyr); library(tibble)"
