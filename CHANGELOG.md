@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.8](https://github.com/kircherlab/IGVF_MPRA_quantification/compare/v0.0.7...v0.0.8) (2026-11-05)
+
+
+### Bug Fixes
+
+* BCalm 0.100.1 and MPRAlib 0.11.3 ([9a8e6b1](https://github.com/kircherlab/IGVF_MPRA_quantification/commit/9a8e6b1754a39936c9e686e23929264a7a09d03c))
+
 ## [0.0.7](https://github.com/kircherlab/IGVF_MPRA_quantification/compare/v0.0.6...v0.0.7) (2026-10-21)
 
 
