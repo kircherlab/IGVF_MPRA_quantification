@@ -5,8 +5,7 @@
 
 ### Bug Fixes
 
-* automate BCALM Docker publishing and update tool versions ([9a8e6b1](https://github.com/kircherlab/IGVF_MPRA_quantification/commit/9a8e6b1754a39936c9e686e23929264a7a09d03c))
-* automate BCALM Docker publishing and update tool versions ([a168524](https://github.com/kircherlab/IGVF_MPRA_quantification/commit/a168524298839a758d90dd81ed7c8bf0427488a7))
+* BCalm 0.100.1 and MPRAlib 0.11.3 ([9a8e6b1](https://github.com/kircherlab/IGVF_MPRA_quantification/commit/9a8e6b1754a39936c9e686e23929264a7a09d03c))
 
 ## [0.0.7](https://github.com/kircherlab/IGVF_MPRA_quantification/compare/v0.0.6...v0.0.7) (2026-10-21)
 
