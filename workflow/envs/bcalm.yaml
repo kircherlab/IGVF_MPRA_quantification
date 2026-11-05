@@ -3,6 +3,9 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - r-bcalm==0.100.0
+  - r-bcalm==0.100.1
   - r-ggplot2
   - r-argparse
+  - r-dplyr
+  - r-tidyr
+  - r-tibble

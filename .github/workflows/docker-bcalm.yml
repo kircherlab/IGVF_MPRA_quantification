@@ -1,0 +1,70 @@
+---
+name: Build and Push BCALM Docker Image
+
+on: # yamllint disable-line rule:truthy
+  push:
+    branches: [master, development]
+    paths:
+      - .github/workflows/docker-bcalm.yml
+      - version.bcalm.txt
+      - workflow/envs/Dockerfile_bcalm
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Read BCALM version from version file
+        id: bcalm_version
+        run: |
+          VERSION=$(tr -d '[:space:]' < version.bcalm.txt)
+          if [[ -z "$VERSION" ]]; then
+            echo "version.bcalm.txt is empty"
+            exit 1
+          fi
+          if [[ ! "$VERSION" =~ ^[0-9]+(\.[0-9]+)*$ ]]; then
+            echo "Invalid version format in version.bcalm.txt: $VERSION"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Check if Docker tag already exists
+        id: tag_exists
+        run: |
+          TAG="visze/bcalm:${{ steps.bcalm_version.outputs.version }}"
+          if OUTPUT=$(docker manifest inspect "$TAG" 2>&1); then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Tag already exists on Docker Hub: $TAG"
+          elif [[ "$OUTPUT" == *"manifest unknown"* || "$OUTPUT" == *"no such manifest"* ]]; then
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "Tag does not exist yet: $TAG"
+          else
+            echo "Failed to inspect Docker tag $TAG: $OUTPUT" >&2
+            exit 1
+          fi
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build and push BCALM Docker image
+        if: steps.tag_exists.outputs.exists == 'false'
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: workflow/envs/Dockerfile_bcalm
+          push: true
+          tags: visze/bcalm:${{ steps.bcalm_version.outputs.version }}
+          build-args: |
+            BCALM_VERSION=${{ steps.bcalm_version.outputs.version }}

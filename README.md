@@ -25,6 +25,25 @@ It generates reporter variants, reporter genomic variants, reporter elements, an
 - snakemake
 - Apptainer/Singularity
 
+## Container images
+
+The mpralib and BCalm images are built and pushed independently to Docker Hub by
+GitHub Actions. Each workflow runs when its version file, Dockerfile, or build
+workflow changes on `master` or `development`, and can also be started manually.
+Existing version tags are not overwritten.
+
+- mpralib: `visze/mpralib:<version>`, configured in [version.mpralib.txt](version.mpralib.txt).
+- BCalm: `visze/bcalm:<version>`, configured in [version.bcalm.txt](version.bcalm.txt),
+  starting with `0.100.1` (upstream release `v0.100.1`).
+
+Both images install packages from conda-forge and Bioconda using Pixi. The BCalm
+quantification rules use the versioned image rather than `latest`. To upgrade
+BCalm, update [version.bcalm.txt](version.bcalm.txt) and the `r-bcalm` pin in
+[workflow/envs/bcalm.yaml](workflow/envs/bcalm.yaml) together.
+
+Publishing uses the repository variable `DOCKERHUB_USERNAME` and secret
+`DOCKERHUB_TOKEN`, as in the mpralib workflow.
+
 ## Variant quantification
 
 Input files are:

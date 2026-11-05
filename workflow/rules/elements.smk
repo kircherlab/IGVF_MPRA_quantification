@@ -47,7 +47,7 @@ rule run_elements_quantification:
     conda:
         getCondaEnv("bcalm.yaml")
     container:
-        "docker://visze/bcalm:latest"
+        VISZE_BCALM_CONTAINER
     threads: 1
     resources:
         # Adjust memory based on input size
