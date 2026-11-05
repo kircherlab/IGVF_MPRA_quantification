@@ -72,7 +72,7 @@ rule run_variants_barcode_quantification:
     conda:
         getCondaEnv("bcalm.yaml")
     container:
-        "docker://visze/bcalm:latest"
+        VISZE_BCALM_CONTAINER
     threads: 1
     resources:
         mem_mb=lambda wc, input, attempt: calc_mem_gb(input[0], 450, attempt) * 1024,  # Adjust memory based on input size
@@ -103,7 +103,7 @@ rule run_variants_oligo_quantification:
     conda:
         getCondaEnv("bcalm.yaml")
     container:
-        "docker://visze/bcalm:latest"
+        VISZE_BCALM_CONTAINER
     threads: 1
     resources:
         mem_mb=lambda wc, input, attempt: calc_mem_gb(input[0], 70, attempt) * 1024,  # Adjust memory based on input size

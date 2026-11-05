@@ -1,11 +1,11 @@
-FROM bioconductor/bioconductor_docker:RELEASE_3_21
+FROM ghcr.io/prefix-dev/pixi:latest
 
+ARG BCALM_VERSION
 
-RUN R -e "BiocManager::install('mpra')" && \
-    R -e "install.packages('argparse')" && \
-    R -e "install.packages('devtools')" && \
-    R -e "library(devtools); devtools::install_github('kircherlab/BCalm', ref = 'development')" && \
-    R -e "install.packages('dplyr')" && \
-    R -e "install.packages('ggplot2')" && \
-    R -e "install.packages('tidyr')" && \
-    R -e "install.packages('tibble')"
+RUN pixi global install --environment bcalm --expose R --expose Rscript \
+    "r-bcalm==${BCALM_VERSION}" r-ggplot2 r-argparse r-dplyr r-tidyr r-tibble \
+    -c conda-forge -c bioconda
+
+RUN Rscript -e "library(BCalm); library(mpra); library(ggplot2); library(argparse); \
+    library(dplyr); library(tidyr); library(tibble); \
+    stopifnot(as.character(packageVersion('BCalm')) == '${BCALM_VERSION}')"

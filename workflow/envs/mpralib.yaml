@@ -4,5 +4,5 @@ channels:
   - bioconda
 dependencies:
   - python>=3.10
-  - mpralib==0.11.0
+  - mpralib==0.11.3
   - htslib
